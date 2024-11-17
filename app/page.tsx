@@ -1,101 +1,197 @@
+"use client";
 import Image from "next/image";
+import vector from "@/public/hero/vector1.png";
+import quote from "@/public/hero/quote-up.png";
+import rating from "@/public/hero/rating.png";
+import shape from "@/public/hero/shape.png";
+import frame from "@/public/hero/frame.png";
+
+import { useRef, useState } from "react";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [protfolio, setProtfolio] = useState(true);
+  const primaryHeading = useRef(null);
+  const primaryContent = useRef(null);
+  const frameRef = useRef(null);
+  useGSAP(() => {
+    const heading = primaryHeading.current;
+    const content = primaryContent.current;
+    const frame = frameRef.current;
+    if (!heading) return;
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    if (protfolio) {
+      gsap.fromTo(
+        heading,
+        { opacity: 0, y: 300, scale: 0.8 }, // Start off-screen (below)
+        {
+          opacity: 1,
+          y: 0, // Moves to original position
+          scale: 1,
+          duration: 0.5,
+          ease: "power2.out",
+        }
+      );
+      gsap.to(content, {
+        y: 0,
+        duration: 0.5,
+        ease: "power2.out",
+      });
+      gsap.to(frame, {
+        opacity: 0,
+        scale: 0,
+        duration: 0.5,
+        ease: "power2.out",
+      });
+    } else {
+      // Animate fading out and moving back to the bottom
+      gsap.to(heading, {
+        opacity: 0,
+        y: 300, // Moves back to below the screen
+        scale: 0.8,
+        duration: 0.5,
+        ease: "power2.out",
+      });
+      gsap.fromTo(
+        content,
+        { opacity: 0, y: 0 },
+        {
+          opacity: 1,
+          y: -200,
+          duration: 0.5,
+          ease: "power2.out",
+        }
+      );
+      gsap.fromTo(
+        frame,
+        { opacity: 0, scale: 0 },
+        {
+          opacity: 1,
+          scale: 1,
+          duration: 0.5,
+          ease: "power2.out",
+        }
+      );
+    }
+  }, [protfolio]);
+
+  return (
+    <div className="relative xl:h-[800px] h-[750px]  text-black">
+      <div ref={primaryHeading} className="text-center">
+        <div className="relative h-[45px] mx-auto w-[103px] mt-8 ">
+          <span className="h-full w-full flex justify-center items-center border rounded-full border-lightBlack  font-medium text-20px">
+            Hello!
+          </span>
+          <Image
+            placeholder="blur"
+            src={vector}
+            width={28}
+            height={29}
+            className="absolute -right-4 -top-5"
+            alt="vector image hero section png"
+          />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <div className="font-semibold text-primaryHeading">
+          <h1>
+            I’m <span className="text-primary">Ali Usman</span>,
+          </h1>
+          <div className="relative max-w-[900px] mx-auto">
+            <h1 className="-mt-8">Frontend Developer</h1>
+            <Image
+              placeholder="blur"
+              src={vector}
+              width={72}
+              height={75}
+              className="absolute -left-9 -bottom-7 -rotate-180"
+              alt="vector image hero section png"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        ref={primaryContent}
+        className="flex justify-between items-center mt-20"
+      >
+        <div className="max-w-[20.5rem] flex flex-col items-start gap-5">
           <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+            placeholder="blur"
+            src={quote}
+            width={36}
+            height={36}
+            alt="quotes start png"
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+          <p className="text-secondary text-20px font-medium">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste quidem
+            similique veritatis neque.
+          </p>
+        </div>
+        <div className="flex items-end gap-5 flex-col">
           <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
+            placeholder="blur"
+            src={rating}
+            width={162}
+            height={32}
+            alt="ratings start png"
           />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+          <div className="text-right">
+            <h3 className="font-bold -mb-2 text-[2.9375rem]">10 Years</h3>
+            <span className="text-20px ">Experince</span>
+          </div>
+        </div>
+      </div>
+      <div className="absolute  w-full max-w-[59.5rem] h-[39.875rem] translate-x-1/2 right-1/2 bottom-0">
+        <div className="relative max-w-[59.5rem] h-[39.875rem] ">
           <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
+            width={952}
+            height={638}
+            placeholder="blur"
+            src={shape}
+            alt="Profile image hero section png "
+            className="-bottom-[26px] absolute "
           />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          <Image
+            ref={frameRef}
+            placeholder="blur"
+            src={frame}
+            alt="Profile image hero section png "
+            className="-bottom-[26px] absolute "
+          />
+          <Image
+            width={952}
+            height={638}
+            src={"/hero/woman.png"}
+            alt="Profile image hero section png "
+            className="-bottom-[26px]  absolute z-50"
+          />
+          <div className="absolute max-w-[362px] min-h-[86px] border-[2px] border-white rounded-full backdrop-blur-lg w-full translate-x-1/2 flex p-2 items-center gap-5   bottom-3 right-1/2 text-[1.5625rem] z-[999] justify-between">
+            <span
+              onClick={() => {
+                setProtfolio(true);
+              }}
+              className={`font-thin rounded-full py-3 px-8 text-white  cursor-pointer flex justify-center items-center animation ${
+                protfolio
+                  ? "bg-primary !font-medium border  border-[#D0D5DD]"
+                  : ""
+              }`}
+            >
+              Protfolio
+            </span>
+            <span
+              onClick={() => {
+                setProtfolio(false);
+              }}
+              className={`font-thin cursor-pointer animation py-3 px-8 text-white  ${
+                !protfolio
+                  ? "bg-primary !font-medium   border rounded-full border-[#D0D5DD]"
+                  : ""
+              }`}
+            >
+              Hire Me
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
